@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
 import 'dotenv/config';
-import cors from "cors";
+// import cors from "cors";
 import cookieParser from "cookie-parser";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
+
 
 // import authRoutes from "./app/modules/auth/auth.routes";
 // import packageRoutes from "./app/modules/package/package.routes";
