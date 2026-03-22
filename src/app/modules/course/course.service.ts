@@ -26,7 +26,6 @@ export const getCourses = async () => {
   return courses;
 };
 
-// Update Course
 export const updateCourse = async (courseId: string,updateData: UpdateCourseInput)=> {
   const existingCourse = await prisma.course.findUnique({
     where: { id: courseId },

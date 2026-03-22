@@ -71,27 +71,47 @@ export const deleteResult = async (resultId: string) => {
 
   return null;
 };
-export const getResultsByInstitute = async (instituteId: string) => {
+export const getResultsByInstitute = async (instituteId: string,page: number,limit: number)=> {
+  if (page < 1 || limit < 1) {
+    throw AppError.badRequest("Invalid pagination parameters");
+  }
+
+  const skip = (page - 1) * limit;
   const institute = await prisma.institute.findUnique({
     where: { id: instituteId },
-    include: {
-      students: {
-        include: {
-          results: {
-            include: {
-              course: true,
-            },
-          },
-        },
-      },
-    },
   });
-
   if (!institute) {
     throw AppError.notFound("Institute not found");
   }
+  const [students, total] = await Promise.all([
+    prisma.student.findMany({
+      where: { instituteId },
+      skip,
+      take: limit,
+      include: {
+        results: {
+          include: {
+            course: true,
+          },
+        },
+      },
+    }),
+    prisma.student.count({
+      where: { instituteId },
+    }),
+  ]);
 
-  return institute;
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: {
+      institute,
+      students,
+    },
+  };
 };
 export const getTopCoursesPerYear = async (year: number) => {
   const result = await prisma.result.groupBy({

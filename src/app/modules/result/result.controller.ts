@@ -49,14 +49,20 @@ try{
     next(error);
   }
 };
-export const getByInstitute = async (req: Request,res: Response,next: NextFunction):Promise<void> => {
-try{
-      const instituteId = req.params.instituteId;
-      const data = await resultService.getResultsByInstitute(instituteId as string);
-
+export const getByInstitute = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
+  try {
+    const instituteId = req.params.instituteId;
+    const pageNumber = Number(req.query.page) || 1;
+    const pageSize = Number(req.query.limit) || 10;
+    const result = await resultService.getResultsByInstitute(
+      instituteId as string,
+      pageNumber,
+      pageSize
+    );
     res.status(200).json({
       success: true,
-      data,
+      meta: result.meta,
+      data: result.data,
     });
   } catch (error) {
     next(error);
