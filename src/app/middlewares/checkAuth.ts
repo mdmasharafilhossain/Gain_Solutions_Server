@@ -8,7 +8,6 @@ import { AppError } from "../utils/AppError";
 export const checkAuth = (req: Request, _res:Response,next:NextFunction): void => {
     try {
         const accessToken = req.cookies?.token;
-
         if (!accessToken) {
 
             throw AppError.unauthorized("Access token is missing");
