@@ -1,15 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+ 
 }
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -21,13 +18,20 @@ model Institute {
   id        String    @id @default(uuid())
   name      String
   location  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
   students  Student[]
+
+  @@index([name])
 }
 
 model Student {
   id          String   @id @default(uuid())
   name        String
   instituteId String
+  createdAt   DateTime @default(now())
+
   institute   Institute @relation(fields: [instituteId], references: [id])
   results     Result[]
 
@@ -35,8 +39,10 @@ model Student {
 }
 
 model Course {
-  id      String   @id @default(uuid())
-  name    String
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
   results Result[]
 }
 
@@ -46,6 +52,7 @@ model Result {
   courseId  String
   score     Int
   year      Int
+  createdAt DateTime @default(now())
 
   student Student @relation(fields: [studentId], references: [id])
   course  Course  @relation(fields: [courseId], references: [id])
@@ -53,4 +60,6 @@ model Result {
   @@index([studentId])
   @@index([courseId])
   @@index([year])
+
+  @@index([year, courseId]) 
 }
