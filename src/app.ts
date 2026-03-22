@@ -9,7 +9,7 @@ import authRoutes from "./app/modules/auth/auth.routes";
 import instituteRoutes from "./app/modules/institute/institute.routes";
 import studentRoutes from "./app/modules/student/student.routes";
 import courseRoutes from "./app/modules/course/course.routes";
-// import fileRoutes from "./app/modules/file/file.route";
+import resultRoutes from "./app/modules/result/result.routes";
 
 
 
@@ -75,7 +75,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/institutes", instituteRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/courses", courseRoutes);
-// app.use("/api/files", fileRoutes);
+app.use("/api/results", resultRoutes);
 
 
 app.use(globalErrorHandler);
