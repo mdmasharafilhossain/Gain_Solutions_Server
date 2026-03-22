@@ -7,8 +7,8 @@ import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 
 import authRoutes from "./app/modules/auth/auth.routes";
 import instituteRoutes from "./app/modules/institute/institute.routes";
-import studentRoutes from "./app/modules/student/student.route";
-// import folderRoutes from "./app/modules/folder/folder.routes";
+import studentRoutes from "./app/modules/student/student.routes";
+import courseRoutes from "./app/modules/course/course.routes";
 // import fileRoutes from "./app/modules/file/file.route";
 
 
@@ -74,7 +74,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/institutes", instituteRoutes);
 app.use("/api/students", studentRoutes);
-// app.use("/api/folders", folderRoutes);
+app.use("/api/courses", courseRoutes);
 // app.use("/api/files", fileRoutes);
 
 
