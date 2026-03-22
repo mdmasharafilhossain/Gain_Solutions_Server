@@ -92,8 +92,5 @@ export const globalErrorHandler = ( err: Error | AppError, req: Request, res: Re
     message
   };
 
-  
-
-
   res.status(statusCode).json(errorResponse);
 };
