@@ -6,7 +6,7 @@ import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 
 
 import authRoutes from "./app/modules/auth/auth.routes";
-// import packageRoutes from "./app/modules/package/package.routes";
+import instituteRoutes from "./app/modules/institute/institute.routes";
 // import subscriptionRoutes from "./app/modules/subscription/subscription.routes";
 // import folderRoutes from "./app/modules/folder/folder.routes";
 // import fileRoutes from "./app/modules/file/file.route";
@@ -72,7 +72,7 @@ app.use(cookieParser());
 //   express.static(path.join(__dirname, "../uploads"))
 // );
 app.use("/api/auth", authRoutes);
-// app.use("/api/packages", packageRoutes);
+app.use("/api/institutes", instituteRoutes);
 // app.use("/api/subscription", subscriptionRoutes);
 // app.use("/api/folders", folderRoutes);
 // app.use("/api/files", fileRoutes);
