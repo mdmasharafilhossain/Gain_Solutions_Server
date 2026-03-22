@@ -1,5 +1,3 @@
-
-import { z } from "zod";
 import { CreateCourseInput, UpdateCourseInput } from "./course.schema";
 import { prisma } from "../../config/db";
 import { AppError } from "../../utils/AppError";
@@ -69,7 +67,7 @@ export const deleteCourse = async(courseId: string)=> {
     throw AppError.notFound("Course not found");
   }
   await prisma.course.delete({
-    
+
     where: { id: courseId },
   });
 
