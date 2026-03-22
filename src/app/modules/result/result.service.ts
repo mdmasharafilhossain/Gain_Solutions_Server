@@ -71,3 +71,55 @@ export const deleteResult = async (resultId: string) => {
 
   return null;
 };
+export const getResultsByInstitute = async (instituteId: string) => {
+  const institute = await prisma.institute.findUnique({
+    where: { id: instituteId },
+    include: {
+      students: {
+        include: {
+          results: {
+            include: {
+              course: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!institute) {
+    throw AppError.notFound("Institute not found");
+  }
+
+  return institute;
+};
+export const getTopCoursesPerYear = async (year: number) => {
+  const result = await prisma.result.groupBy({
+    by: ["courseId"],
+    where: { year },
+    _count: { courseId: true },
+    orderBy: {
+      _count: { courseId: "desc" },
+    },
+    take: 5,
+  });
+
+  return result;
+};
+export const getTopStudents = async () => {
+  const result = await prisma.result.groupBy({
+    by: ["studentId"],
+    _avg: { score: true },
+    orderBy: {
+      _avg: { score: "desc" },
+    },
+    take: 10,
+  });
+
+  return result;
+};
+export const performanceTest = async () => {
+  return prisma.$queryRawUnsafe(`
+    EXPLAIN ANALYZE SELECT * FROM "Result" WHERE "year" = 2024;
+  `);
+};
