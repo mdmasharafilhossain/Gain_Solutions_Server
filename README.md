@@ -238,7 +238,7 @@ Used for:
 | `/api/results`                                | GET    | Get results (paginated)          |
 | `/api/results/:id`                            | PATCH  | Update result                    |
 | `/api/results/:id`                            | DELETE | Delete result                    |
-| `/api/results/institute/:instituteId`         | GET    | Results per institute            |
+| `/api/results/institute/:instituteId`         | GET    | Results per institute(paginated)            |
 | `/api/results/top-courses?year=2024`          | GET    | Top courses per year             |
 | `/api/results/top-students`                   | GET    | Top students                     |
 
