@@ -56,7 +56,7 @@ model Result {
 
   student Student @relation(fields: [studentId], references: [id])
   course  Course  @relation(fields: [courseId], references: [id])
-
+ @@unique([studentId, courseId, year])
   @@index([studentId])
   @@index([courseId])
   @@index([year])

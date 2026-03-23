@@ -16,14 +16,19 @@ export const create = async (req: Request,res: Response,next: NextFunction):Prom
     next(error);
   }
 };
-export const getAll = async (_req: Request,res: Response,next: NextFunction): Promise<void> => {
+export const getAll = async(req: Request, res:Response,next: NextFunction): Promise<void> => {
   try {
-      const courses = await courseService.getCourses();
-      res.status(200).json({
+    const pageNumber =Number(req.query.page) || 1;
+    const pageSize = Number(req.query.limit) || 10;
+
+    const result = await courseService.getCourses(pageNumber, pageSize);
+
+    res.status(200).json({
       success: true,
-      data: courses,
+      meta: result.meta,
+      data: result.data,
     });
-  }catch (error){
+  } catch (error) {
     next(error);
   }
 };

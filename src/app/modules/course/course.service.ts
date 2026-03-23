@@ -21,9 +21,25 @@ export const createCourse = async (courseData: CreateCourseInput)=> {
   return createdCourse;
 };
 
-export const getCourses = async () => {
-  const courses = await prisma.course.findMany();
-  return courses;
+export const getCourses = async (page: number, limit: number) => {
+  const skip = (page - 1) * limit;
+
+  const [courses, total] = await Promise.all([
+    prisma.course.findMany({
+      skip,
+      take: limit,
+    }),
+    prisma.course.count(),
+  ]);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: courses,
+  };
 };
 
 export const updateCourse = async (courseId: string,updateData: UpdateCourseInput)=> {

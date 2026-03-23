@@ -1,5 +1,5 @@
 import express from "express";
-import {create,getAll,update,remove,getByInstitute,getTopCourses,getTopStudents,performance,} from "./result.controller";
+import {create,getAll,update,remove,getByInstitute,getTopCourses,getTopStudents,performanceCompareController,} from "./result.controller";
 import { validate } from "../../middlewares/validate";
 import {createResultSchema,updateResultSchema,} from "./result.schema";
 import { checkAuth } from "../../middlewares/checkAuth";
@@ -12,6 +12,6 @@ router.delete("/:id", checkAuth, remove);
 router.get("/institute/:instituteId",checkAuth,getByInstitute);
 router.get("/top-courses",checkAuth,getTopCourses);
 router.get("/top-students",checkAuth,getTopStudents);
-router.get("/performance-test",checkAuth,performance);
+router.get("/performance-test",checkAuth,performanceCompareController);
 
 export default router;

@@ -30,15 +30,25 @@ export const createResult = async(resultData:CreateResultInput) => {
   });
   return createdResult;
 };
-export const getResults = async () => {
-  const results = await prisma.result.findMany({
-    include: {
-      student: true,
-      course: true,
-    },
-  });
+export const getResults = async (page: number, limit: number) => {
+  const skip = (page - 1) * limit;
+  const [results,total] =await Promise.all([
 
-  return results;
+    prisma.result.findMany({
+      skip,
+      take: limit,
+      include: {
+        student: true,
+        course: true,
+      },
+    }),
+    prisma.result.count(),
+  ]);
+
+  return {
+    meta: {page,limit,total},
+    data: results,
+  };
 };
 export const updateResult = async (resultId: string,updateData: UpdateResultInput)=> {
   const existingResult = await prisma.result.findUnique({
@@ -114,7 +124,7 @@ export const getResultsByInstitute = async (instituteId: string,page: number,lim
   };
 };
 export const getTopCoursesPerYear = async (year: number) => {
-  const result = await prisma.result.groupBy({
+  const grouped = await prisma.result.groupBy({
     by: ["courseId"],
     where: { year },
     _count: { courseId: true },
@@ -124,10 +134,25 @@ export const getTopCoursesPerYear = async (year: number) => {
     take: 5,
   });
 
-  return result;
+  const courseIds = grouped.map((g) => g.courseId);
+
+  const courses = await prisma.course.findMany({
+    where: {
+      id: { in: courseIds },
+    },
+  });
+
+  return grouped.map((item) => {
+    const course = courses.find((c) => c.id === item.courseId);
+    return {
+      courseId: item.courseId,
+      courseName: course?.name,
+      totalTaken: item._count.courseId,
+    };
+  });
 };
 export const getTopStudents = async () => {
-  const result = await prisma.result.groupBy({
+  const grouped = await prisma.result.groupBy({
     by: ["studentId"],
     _avg: { score: true },
     orderBy: {
@@ -136,10 +161,92 @@ export const getTopStudents = async () => {
     take: 10,
   });
 
-  return result;
+  const studentIds = grouped.map((g) => g.studentId);
+
+  const students = await prisma.student.findMany({
+    where: {
+      id: { in: studentIds },
+    },
+    include: {
+      institute: true,
+    },
+  });
+
+  return grouped.map((item) => {
+    const student = students.find((s) => s.id === item.studentId);
+    return {
+      studentId: item.studentId,
+      studentName: student?.name,
+      institute: student?.institute?.name,
+      avgScore: item._avg.score,
+    };
+  });
 };
-export const performanceTest = async () => {
-  return prisma.$queryRawUnsafe(`
+// export const performanceTest = async () => {
+//   const before = await prisma.$queryRawUnsafe(`
+//     EXPLAIN ANALYZE SELECT * FROM "Result" WHERE "year" = 2024;
+//   `);
+
+//   return {
+//     message: "Run this before and after creating index on year",
+//     result: before,
+//   };
+// };
+export const performanceCompare = async () => {
+
+  await prisma.$executeRawUnsafe(`
+    SET enable_indexscan = OFF;
+    SET enable_bitmapscan = OFF;
+  `);
+
+  const beforeResult: any[] = await prisma.$queryRawUnsafe(`
     EXPLAIN ANALYZE SELECT * FROM "Result" WHERE "year" = 2024;
   `);
+
+  await prisma.$executeRawUnsafe(`
+    SET enable_indexscan = ON;
+    SET enable_bitmapscan = ON;
+  `);
+
+  const afterResult: any[] = await prisma.$queryRawUnsafe(`
+    EXPLAIN ANALYZE SELECT * FROM "Result" WHERE "year" = 2024;
+  `);
+  const parsePlan = (result: any[]) => {
+    const text = result.map((r) => r["QUERY PLAN"]).join("\n");
+
+    const executionTime = text.match(/Execution Time: ([\d.]+) ms/)?.[1];
+    const rows = text.match(/rows=(\d+)/)?.[1];
+
+    let scanType = "Unknown";
+    if (text.includes("Seq Scan")) scanType = "Sequential Scan";
+    else if (text.includes("Bitmap Index Scan")) scanType = "Bitmap Index Scan";
+    else if (text.includes("Index Scan")) scanType = "Index Scan";
+
+    return {
+      scanType,
+      executionTime: executionTime ? executionTime + " ms" : "N/A",
+      rows: rows ? Number(rows) : 0,
+    };
+  };
+
+  const before = parsePlan(beforeResult);
+  const after = parsePlan(afterResult);
+  const beforeTime = parseFloat(before.executionTime);
+  const afterTime = parseFloat(after.executionTime);
+
+  const improvement =
+    beforeTime && afterTime
+      ? `${(((beforeTime - afterTime) / beforeTime) * 100).toFixed(2)}% faster`
+      : "N/A";
+
+  return {
+    query: `SELECT * FROM Result WHERE year = 2024`,
+    before,
+    after,
+    improvement,
+    message:
+      after.scanType !== "Sequential Scan"
+        ? "Index successfully optimized the query"
+        : "Index not used",
+  };
 };

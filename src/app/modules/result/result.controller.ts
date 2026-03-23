@@ -11,14 +11,18 @@ try{
     next(error);
   }
 };
-export const getAll = async (_req: Request,res: Response,next: NextFunction): Promise<void> => {
-try{
-      const results = await resultService.getResults();
-      res.status(200).json({
+export const getAll = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+try {
+       const pageNumber = Number(req.query.page) || 1;
+       const pageSize = Number(req.query.limit) || 10;
+       const result = await resultService.getResults(pageNumber, pageSize);
+
+    res.status(200).json({
       success: true,
-      data: results,
+      meta: result.meta,
+      data: result.data,
     });
-  } catch (error){
+  } catch (error) {
     next(error);
   }
 };
@@ -92,14 +96,30 @@ try{
     next(error);
   }
 };
-export const performance = async (_req: Request,res: Response,next: NextFunction): Promise<void>=> {
-  try{
-    const data = await resultService.performanceTest();
+// export const performance = async (_req: Request,res: Response,next: NextFunction): Promise<void>=> {
+//   try{
+//     const data = await resultService.performanceTest();
+//     res.status(200).json({
+//       success: true,
+//       data,
+//     });
+//   }catch(error){
+//     next(error);
+//   }
+// };
+export const performanceCompareController = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const data = await resultService.performanceCompare();
+
     res.status(200).json({
       success: true,
       data,
     });
-  }catch(error){
+  } catch (error) {
     next(error);
   }
 };
