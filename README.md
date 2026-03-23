@@ -5,12 +5,22 @@ A scalable and modular **Student Management System** built to demonstrate real-w
 Built using **Node.js, Express.js, TypeScript, Prisma ORM, PostgreSQL, JWT (Cookie-based Auth), and Zod**, this backend implements full CRUD operations, advanced queries, pagination, and performance benchmarking.
 
 ---
-# 🚀 Live API
+# Live API
 
 🔗 Live Server (Vercel): https://your-vercel-api-link.vercel.app  
 🔗 API Base URL: https://your-vercel-api-link.vercel.app/api  
 
 > Note: This project is currently deployed on **Vercel** for demonstration purposes.
+
+---
+# Demo Credentials
+
+You can use the following credentials to test the API:
+
+### Test User
+
+- Email: testuser@gmail.com  
+- Password: 123456  
 
 ---
 # Features
