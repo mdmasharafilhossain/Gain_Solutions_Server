@@ -182,16 +182,6 @@ export const getTopStudents = async () => {
     };
   });
 };
-// export const performanceTest = async () => {
-//   const before = await prisma.$queryRawUnsafe(`
-//     EXPLAIN ANALYZE SELECT * FROM "Result" WHERE "year" = 2024;
-//   `);
-
-//   return {
-//     message: "Run this before and after creating index on year",
-//     result: before,
-//   };
-// };
 export const performanceCompare = async () => {
 
   await prisma.$executeRawUnsafe(`
