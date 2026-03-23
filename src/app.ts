@@ -80,7 +80,7 @@ app.use("/api/results", resultRoutes);
 
 app.use(globalErrorHandler);
 app.get("/", (_req: Request, res: Response) => {
-  res.send("Welcome to Zoom IT Server");
+  res.send("Welcome to Gain Solutions Server");
 });
 
 export default app;
