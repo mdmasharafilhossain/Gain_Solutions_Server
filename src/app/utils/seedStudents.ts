@@ -2,7 +2,7 @@
 import { prisma } from "../config/db";
 
 async function main() {
-  console.log("Seeding started...");
+  console.log("Seeding started Please wait...");
 
   const institutes = await prisma.institute.createMany({
     data: Array.from({ length: 1000 }, (_, i) => ({
