@@ -7,8 +7,8 @@ Built using **Node.js, Express.js, TypeScript, Prisma ORM, PostgreSQL, JWT (Cook
 ---
 # Live API
 
-🔗 Live Server (Vercel): https://your-vercel-api-link.vercel.app  
-🔗 API Base URL: https://your-vercel-api-link.vercel.app/api  
+Live Server (Vercel): https://gain-solutions-server.vercel.app/  
+ 
 
 > Note: This project is currently deployed on **Vercel** for demonstration purposes.
 
@@ -19,8 +19,8 @@ You can use the following credentials to test the API:
 
 ### Test User
 
-- Email: testuser@gmail.com  
-- Password: 123456  
+- Email: mahi@gmail.com  
+- Password: Mahi@2221  
 
 ---
 # Features
