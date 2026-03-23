@@ -141,7 +141,9 @@ Advanced comparison implemented:
 ---
 
 ## Seed Data (100,000 Records)
-
+```bash
+npm run seed
+```
 Database seeding implemented for:
 
 - Institutes
@@ -265,8 +267,8 @@ Used for:
 ## 1️⃣ Clone & Install
 
 ```bash
-git clone <your-repo-link>
-cd your-project
+git clone https://github.com/mdmasharafilhossain/Gain_Solutions_Server
+cd Gain_Solutions_Server
 npm install
 ```
 ## 2️⃣ Setup Environment Variables
@@ -322,21 +324,3 @@ Improvement
 
 ---
 
-# Seed Data (100K Records)
-```bash
-npm run seed
-```
-## Seed Data Details
-
-This will generate approximately **100,000 records** across:
-
-- Students  
-- Results  
-- Institutes  
-- Courses  
-
-This large dataset helps:
-
-- Simulate real-world scenarios  
-- Test indexing performance  
-- Validate scalability  
