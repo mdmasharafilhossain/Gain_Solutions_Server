@@ -96,13 +96,24 @@ try{
     next(error);
   }
 };
-export const performanceCompareController = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
+export const performanceCompareController = async (_req: Request,res: Response,next: NextFunction
+):Promise<void> => {
+try{
     const data = await resultService.performanceCompare();
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+export const performance = async ( _req: Request,res: Response,next: NextFunction
+):Promise<void> => {
+  try {
+    const data = await resultService.performanceTest();
 
     res.status(200).json({
       success: true,

@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import 'dotenv/config';
-// import cors from "cors";
 import cookieParser from "cookie-parser";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 
@@ -58,19 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
-// app.use(
-//   cors({
-//     origin:[ process.env.FRONTEND_URL!, process.env.FRONTEND_PROD_URL!],
-//     credentials: true,
-//   })
-// );
 
-// import path from "path";
-
-// app.use(
-//   "/uploads",
-//   express.static(path.join(__dirname, "../uploads"))
-// );
 app.use("/api/auth", authRoutes);
 app.use("/api/institutes", instituteRoutes);
 app.use("/api/students", studentRoutes);

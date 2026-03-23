@@ -240,3 +240,39 @@ export const performanceCompare = async () => {
         : "Index not used",
   };
 };
+export const performanceTest = async () => {
+  const result: any[] = await prisma.$queryRawUnsafe(`
+    EXPLAIN ANALYZE SELECT * FROM "Result" WHERE "year" = 2024;
+  `);
+
+  const planText = result.map((r) => r["QUERY PLAN"]).join("\n");
+
+  const executionTimeMatch = planText.match(/Execution Time: ([\d.]+) ms/);
+  const executionTime = executionTimeMatch
+    ? executionTimeMatch[1] + " ms"
+    : "N/A";
+
+  const rowsMatch = planText.match(/rows=(\d+)/);
+  const rows = rowsMatch ? Number(rowsMatch[1]) : 0;
+
+  let scanType = "Unknown";
+  if (planText.includes("Bitmap Index Scan")) scanType = "Bitmap Index Scan";
+  else if (planText.includes("Index Scan")) scanType = "Index Scan";
+  else if (planText.includes("Seq Scan")) scanType = "Sequential Scan";
+
+  const indexUsed =
+    planText.includes("Index Scan") || planText.includes("Bitmap Index Scan");
+
+  return {
+    query: `SELECT * FROM Result WHERE year = 2024`,
+    analysis: {
+      scanType,
+      executionTime,
+      rows,
+      indexUsed,
+    },
+    message: indexUsed
+      ? "Query is optimized using index"
+      : "Query is not optimized (sequential scan)",
+  };
+};
